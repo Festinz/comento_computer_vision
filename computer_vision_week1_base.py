@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+
 # 이미지로드
 image = cv2.imread('sample.jpg')  # 분석할 이미지 파일
 # BGR에서HSV 색상공간으로변환
