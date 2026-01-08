@@ -154,5 +154,5 @@ test_depth_3d_converter.py::TestGenerateDepthMap::test_none_input_raises_error P
 
 ## 👤 Author
 
-- **Shin** - 의생명공학/전기전자공학 전공
+- **Shin** - 의공학/전기전자공학 전공
 - Date: 2025-01-09
