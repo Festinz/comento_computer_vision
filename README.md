@@ -18,6 +18,7 @@ pip install numpy opencv-python pytest matplotlib
 ```
 
 ### 디렉토리 구조
+
 ```
 2d_to_3d_project/
 ├── src/                           # 소스 코드
@@ -39,28 +40,28 @@ pip install numpy opencv-python pytest matplotlib
 
 ```bash
 # 기본 실행
-pytest test_depth_3d_converter.py -v
+pytest tests/test_depth_3d_converter.py -v
 
 # 상세 출력
-pytest test_depth_3d_converter.py -v --tb=short
+pytest tests/test_depth_3d_converter.py -v --tb=short
 
 # 특정 테스트만 실행
-pytest test_depth_3d_converter.py::TestGenerateDepthMap -v
+pytest tests/test_depth_3d_converter.py::TestGenerateDepthMap -v
 
 # 커버리지 리포트 (pytest-cov 설치 필요)
-pytest test_depth_3d_converter.py -v --cov=depth_3d_converter --cov-report=html
+pytest tests/test_depth_3d_converter.py -v --cov=src.depth_3d_converter --cov-report=html
 ```
 
 ### 2. 시각화 데모 실행
 
 ```bash
-python visualization_demo.py
+python scripts/visualization_demo.py
 ```
 
 ### 3. 개별 이미지 처리
 
 ```python
-from depth_3d_converter import process_2d_to_3d
+from src.depth_3d_converter import process_2d_to_3d
 
 result = process_2d_to_3d("your_image.jpg", "./output")
 print(f"3D 포인트 수: {result['num_3d_points']}")
@@ -125,13 +126,13 @@ print(f"3D 포인트 수: {result['num_3d_points']}")
 
 ```
 ========================= test session starts ==========================
-collected 35 items
+collected 43 items
 
 test_depth_3d_converter.py::TestGenerateDepthMap::test_basic_functionality PASSED
 test_depth_3d_converter.py::TestGenerateDepthMap::test_output_shape PASSED
 test_depth_3d_converter.py::TestGenerateDepthMap::test_none_input_raises_error PASSED
 ...
-========================= 35 passed in 1.23s ===========================
+========================= 43 passed in 1.23s ===========================
 ```
 
 ## 📊 결과물
@@ -159,5 +160,5 @@ test_depth_3d_converter.py::TestGenerateDepthMap::test_none_input_raises_error P
 
 ## 👤 Author
 
-- **Shin** - 의공학/전기전자공학 전공
+- **Shin** - 의생명공학/전기전자공학 전공
 - Date: 2025-01-09
