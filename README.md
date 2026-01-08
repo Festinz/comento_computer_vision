@@ -18,14 +18,19 @@ pip install numpy opencv-python pytest matplotlib
 ```
 
 ### 디렉토리 구조
-
 ```
 2d_to_3d_project/
-├── depth_3d_converter.py      # 메인 변환 모듈
-├── test_depth_3d_converter.py # Unit Test 코드
-├── visualization_demo.py      # 시각화 데모
-├── README.md                  # 프로젝트 문서
-└── output/                    # 결과물 저장 폴더
+├── src/                           # 소스 코드
+│   └── depth_3d_converter.py
+├── tests/                         # Unit Test
+│   └── test_depth_3d_converter.py
+├── scripts/                       # 실행 스크립트
+│   └── visualization_demo.py
+├── results/                       # 결과 이미지
+│   ├── comparison.png
+│   ├── shapes_pipeline.png
+│   └── ...
+└── README.md                      # 프로젝트 문서
 ```
 
 ## 🚀 실행 방법
