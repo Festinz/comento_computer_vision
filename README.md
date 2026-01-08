@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-# Comento Computer Vision 
-컴퓨터 비전 프로젝트 - 이미지 처리 및 전처리
-
-## 프로젝트 구조
-=======
 # Comento Computer Vision
 
 컴퓨터 비전 프로젝트 - 이미지 처리, 전처리 및 2D→3D 변환
@@ -14,7 +8,6 @@
 
 ## 프로젝트 구조
 
->>>>>>> computer_vision_week2
 ```
 comento_computer_vision/
 ├── computer_vision_week1_base.py    # 빨간색 검출 코드
@@ -68,10 +61,6 @@ pip install opencv-python numpy pillow datasets huggingface-hub
 ```
 
 ## 출력 결과
-<<<<<<< HEAD
-
-=======
->>>>>>> computer_vision_week2
 전처리된 이미지는 `preprocessed_samples/` 폴더에 저장됩니다:
 - `food101_image_0_resized.jpg` - 크기 조정
 - `food101_image_0_gray_normalized.jpg` - Grayscale & 정규화
@@ -81,8 +70,6 @@ pip install opencv-python numpy pillow datasets huggingface-hub
 - `food101_image_0_brightened.jpg` - 밝기 조정
 
 (총 5개 이미지 × 6개 변형 = 30개 파일 생성)
-<<<<<<< HEAD
-=======
 
 ---
 
@@ -217,4 +204,3 @@ test_depth_3d_converter.py::TestGenerateDepthMap::test_output_shape PASSED
 
 - **Shin** - 의공학/전기전자공학 전공
 - Date: 2025-01-09
->>>>>>> computer_vision_week2
