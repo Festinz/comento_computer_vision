@@ -192,6 +192,151 @@ test_depth_3d_converter.py::TestGenerateDepthMap::test_output_shape PASSED
 
 ---
 
+# 📌 Week 3: AI 기반 객체 탐지 및 OpenCV 시각화
+
+YOLOv8을 활용한 객체 탐지 모델 학습 및 OpenCV를 통한 결과 시각화 프로젝트입니다.
+
+## 프로젝트 개요
+
+본 프로젝트는 다음 목표를 달성합니다:
+1. YOLOv8 모델을 활용한 커스텀 데이터셋 학습
+2. OpenCV를 사용한 객체 탐지 결과 시각화
+3. Matplotlib을 활용한 모델 성능 평가 시각화
+
+## 프로젝트 구조
+```
+Yolo project/
+├── src/
+│   ├── data.yaml          # 데이터셋 설정 파일
+│   ├── train.py           # 모델 학습 스크립트
+│   ├── detect.py          # 객체 탐지 + OpenCV 시각화
+│   └── visualize.py       # 성능 그래프 시각화
+├── results/
+│   ├── detection_result.jpg      # 탐지 결과 이미지
+│   └── model_performance.png     # Precision/Recall 그래프
+├── docs/
+│   └── README.md
+└── datasets/
+    ├── train/{images, labels}
+    ├── valid/{images, labels}
+    └── test/{images, labels}
+```
+
+## 환경 설정
+
+### 필요 라이브러리 설치
+```bash
+pip install torch torchvision opencv-python matplotlib ultralytics
+```
+
+## 실행 방법
+
+### 1. 데이터셋 준비
+`datasets/` 폴더에 YOLO 형식의 데이터셋을 준비합니다.
+
+YOLO 라벨 형식 (txt 파일):
+```
+# class_id x_center y_center width height (0~1 정규화)
+0 0.5 0.5 0.3 0.4
+1 0.2 0.3 0.1 0.2
+```
+
+### 2. 모델 학습
+```bash
+cd "Yolo project/src"
+python train.py
+```
+
+**학습 파라미터:**
+- Epochs: 10 (기본) / 20 (증강 적용 시)
+- Image Size: 640x640
+- Model: YOLOv8n (nano)
+
+### 3. 객체 탐지
+```bash
+python detect.py
+```
+
+### 4. 결과 시각화
+```bash
+python visualize.py
+```
+
+## 주요 코드 설명
+
+### `train.py` - 모델 학습
+```python
+from ultralytics import YOLO
+
+model = YOLO("yolov8n.pt")  # YOLOv8 기본 모델
+model.train(data="data.yaml", epochs=10, imgsz=640)
+```
+
+### `detect.py` - 객체 탐지 및 시각화
+```python
+import cv2
+from ultralytics import YOLO
+
+model = YOLO("runs/train/exp/weights/best.pt")
+results = model(image)
+
+for result in results:
+    for box in result.boxes:
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        label = result.names[int(box.cls[0])]
+        confidence = box.conf[0]
+        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.putText(image, f"{label} {confidence:.2f}", (x1, y1-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+```
+
+### `visualize.py` - 성능 시각화
+```python
+import matplotlib.pyplot as plt
+
+metrics = model.val()
+plt.plot(metrics['precision'], label="Precision")
+plt.plot(metrics['recall'], label="Recall")
+plt.xlabel("Epochs")
+plt.ylabel("Score")
+plt.legend()
+plt.title("Model Performance")
+plt.savefig("../results/model_performance.png")
+```
+
+## 실행 결과
+
+### 모델 평가 결과
+
+| 메트릭 | 설명 |
+|--------|------|
+| mAP@0.5 | IoU 0.5 기준 평균 정밀도 |
+| mAP@0.5:0.95 | IoU 0.5~0.95 기준 평균 정밀도 |
+| Precision | 탐지한 객체 중 정답 비율 |
+| Recall | 실제 객체 중 탐지한 비율 |
+
+### 결과 이미지
+
+1. **detection_result.jpg** - 바운딩 박스가 표시된 탐지 결과
+2. **model_performance.png** - Precision/Recall 학습 곡선
+
+## 성능 향상 방법
+
+1. **데이터 증강 (Augmentation)**
+   - 이미지 회전, 밝기 조절, 노이즈 추가
+   - `model.train(data="data.yaml", epochs=20, imgsz=640, augment=True)`
+
+2. **하이퍼파라미터 튜닝**
+   - 학습률 조정
+   - Batch Size 조정
+
+3. **더 큰 모델 사용**
+   - `yolov8s.pt` (small)
+   - `yolov8m.pt` (medium)
+   - `yolov8l.pt` (large)
+
+---
+
 ## 📚 참고 자료
 
 - [OpenCV Documentation](https://docs.opencv.org/)
@@ -199,6 +344,8 @@ test_depth_3d_converter.py::TestGenerateDepthMap::test_output_shape PASSED
 - [pytest Documentation](https://docs.pytest.org/)
 - [Hugging Face Datasets](https://huggingface.co/datasets)
 - [PLY File Format](http://paulbourke.net/dataformats/ply/)
+- [Ultralytics YOLOv8 Documentation](https://docs.ultralytics.com/)
+- [PyTorch Documentation](https://pytorch.org/docs/)
 
 ## 👤 Author
 
