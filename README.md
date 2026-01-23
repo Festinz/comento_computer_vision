@@ -1,5 +1,13 @@
 # Comento Computer Vision
 
+
+컴퓨터 비전 프로젝트 - 이미지 처리, 전처리, 2D→3D 변환 및 객체 탐지
+
+---
+
+## 📁 프로젝트 구조
+
+
 컴퓨터 비전 프로젝트 - 이미지 처리, 전처리 및 2D→3D 변환
 
 ---
@@ -8,14 +16,29 @@
 
 ## 프로젝트 구조
 
+
 ```
 comento_computer_vision/
-├── computer_vision_week1_base.py    # 빨간색 검출 코드
-├── computer_vision_week1_add.py     # 이미지 전처리 코드 (Hugging Face 데이터셋 사용)
-├── sample.jpg                        # 테스트 이미지
-├── preprocessed_samples/             # 전처리된 이미지 저장 폴더
-└── README.md
+├── README.md
+├── week1_preprocessing/          # Week1: 이미지 처리 및 전처리
+│   ├── computer_vision_week1_base.py
+│   ├── computer_vision_week1_add.py
+│   ├── sample.jpg
+│   └── preprocessed_samples/
+├── week2_2d_to_3d/               # Week2: Unit Test 및 2D→3D 변환
+│   ├── src/
+│   ├── tests/
+│   ├── scripts/
+│   └── results/
+└── week3_yolo/                   # Week3: YOLOv8 객체 탐지
+    ├── src/
+    ├── results/
+    └── datasets/
 ```
+
+---
+
+# 📌 Week 1: 이미지 처리 및 전처리
 
 ## 기능
 
@@ -28,38 +51,142 @@ comento_computer_vision/
 #### 데이터셋
 - **Hugging Face food101 데이터셋** 사용
 - URL: https://huggingface.co/datasets/ethz/food101
-- 5개 샘플 이미지로 테스트
-
-#### 이상치 탐지
-- **너무 어두운 이미지 필터링**: 평균 밝기가 50 미만인 이미지 제거
-- **객체 크기 검증**: 픽셀 분산이 100 미만인 이미지 제거
 
 #### 전처리 과정
-1. **크기 조정**: 모든 이미지를 224x224 크기로 통일
-2. **색상 변환**: Grayscale 변환 및 0-1 사이로 정규화
-3. **노이즈 제거**: Gaussian Blur 필터 적용 (radius=2)
-4. **데이터 증강**:
-   - 좌우 반전
-   - 15도 회전
-   - 밝기 조정 (30% 증가)
+- 크기 조정 (224x224)
+- Grayscale 변환 및 정규화
+- Gaussian Blur 노이즈 제거
+- 데이터 증강 (좌우 반전, 회전, 밝기 조정)
 
-## 사용법
-
-### 빨간색 검출
+## 실행 방법
 ```bash
+cd week1_preprocessing
+pip install opencv-python numpy pillow datasets huggingface-hub
 python computer_vision_week1_base.py
-```
-
-### 이미지 전처리 (Hugging Face 데이터셋)
-```bash
 python computer_vision_week1_add.py
 ```
 
-## 필요한 패키지
+---
+
+# 📌 Week 2: Unit Test 구성 및 2D → 3D 변환
+
+## 기능
+- Python pytest를 활용한 Unit Test 구성
+- OpenCV와 NumPy를 사용한 2D → 3D 변환 알고리즘 구현
+- 깊이 맵(Depth Map) 생성 및 3D 포인트 클라우드 변환
+
+## 주요 함수
+
+| 함수 | 설명 |
+|------|------|
+| `generate_depth_map()` | 2D 이미지에서 깊이 맵 생성 |
+| `apply_colormap()` | 깊이 맵에 컬러맵 적용 |
+| `convert_to_3d_points()` | 깊이 맵을 3D 포인트 클라우드로 변환 |
+| `save_point_cloud_ply()` | PLY 파일로 저장 |
+
+## 실행 방법
 ```bash
-pip install opencv-python numpy pillow datasets huggingface-hub
+cd week2_2d_to_3d
+pip install numpy opencv-python pytest matplotlib
+
+# Unit Test 실행
+pytest tests/test_depth_3d_converter.py -v
+
+# 시각화 데모 실행
+python scripts/visualization_demo.py
 ```
 
+---
+
+# 📌 Week 3: AI 기반 객체 탐지 및 OpenCV 시각화
+
+## 기능
+- YOLOv8 모델을 활용한 커스텀 데이터셋 학습
+- OpenCV를 사용한 객체 탐지 결과 시각화
+- Matplotlib을 활용한 모델 성능 평가 시각화
+
+## 프로젝트 구조
+```
+week3_yolo/
+├── src/
+│   ├── data.yaml          # 데이터셋 설정
+│   ├── train.py           # 모델 학습
+│   ├── detect.py          # 객체 탐지 + OpenCV 시각화
+│   └── visualize.py       # 성능 그래프
+├── results/
+│   ├── detection_result.jpg
+│   └── model_performance.png
+└── datasets/
+    ├── train/{images, labels}
+    ├── valid/{images, labels}
+    └── test/{images, labels}
+```
+
+## 실행 방법
+```bash
+cd week3_yolo
+pip install torch torchvision opencv-python matplotlib ultralytics
+
+# 모델 학습
+cd src
+python train.py
+
+# 객체 탐지
+python detect.py
+
+# 결과 시각화
+python visualize.py
+```
+
+
+## 주요 코드
+
+### train.py
+```python
+from ultralytics import YOLO
+
+model = YOLO("yolov8n.pt")
+model.train(data="data.yaml", epochs=10, imgsz=640)
+```
+
+### detect.py
+```python
+import cv2
+from ultralytics import YOLO
+
+model = YOLO("runs/train/exp/weights/best.pt")
+results = model(image)
+
+for result in results:
+    for box in result.boxes:
+        x1, y1, x2, y2 = map(int, box.xyxy[0])
+        label = result.names[int(box.cls[0])]
+        confidence = box.conf[0]
+        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.putText(image, f"{label} {confidence:.2f}", (x1, y1-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+```
+
+## 성능 지표
+
+| 메트릭 | 설명 |
+|--------|------|
+| mAP@0.5 | IoU 0.5 기준 평균 정밀도 |
+| mAP@0.5:0.95 | IoU 0.5~0.95 기준 평균 정밀도 |
+| Precision | 탐지한 객체 중 정답 비율 |
+| Recall | 실제 객체 중 탐지한 비율 |
+
+## 성능 향상 방법
+
+1. **데이터 증강**: `augment=True` 옵션 추가
+2. **하이퍼파라미터 튜닝**: 학습률, Batch Size 조정
+3. **더 큰 모델 사용**: YOLOv8s, YOLOv8m, YOLOv8l
+
+---
+
+## 📚 참고 자료
+
+=======
 ## 출력 결과
 전처리된 이미지는 `preprocessed_samples/` 폴더에 저장됩니다:
 - `food101_image_0_resized.jpg` - 크기 조정
@@ -338,11 +465,12 @@ plt.savefig("../results/model_performance.png")
 ---
 
 ## 📚 참고 자료
-
 - [OpenCV Documentation](https://docs.opencv.org/)
 - [NumPy Documentation](https://numpy.org/doc/)
 - [pytest Documentation](https://docs.pytest.org/)
 - [Hugging Face Datasets](https://huggingface.co/datasets)
+- [Ultralytics YOLOv8 Documentation](https://docs.ultralytics.com/)
+- [PyTorch Documentation](https://pytorch.org/docs/)
 - [PLY File Format](http://paulbourke.net/dataformats/ply/)
 - [Ultralytics YOLOv8 Documentation](https://docs.ultralytics.com/)
 - [PyTorch Documentation](https://pytorch.org/docs/)
@@ -351,3 +479,4 @@ plt.savefig("../results/model_performance.png")
 
 - **Shin** - 의공학/전기전자공학 전공
 - Date: 2025-01-09
+
